@@ -1,0 +1,34 @@
+{
+  "format": "book-example-model-v1",
+  "namespace": "https://example.org/service/",
+  "classes": ["ServiceDeployment", "Team", "Procedure", "Policy", "Concept", "ConceptScheme", "DocumentRevision"],
+  "relations": {
+    "depends_on": {"source": "ServiceDeployment", "target": "ServiceDeployment"},
+    "operated_by": {"source": "ServiceDeployment", "target": "Team"},
+    "applies_to": {"source": "Procedure", "target": "ServiceDeployment"},
+    "governs": {"source": "Policy", "target": "Procedure"},
+    "risk_category": {"source": "Policy", "target": "Concept"},
+    "in_scheme": {"source": "Concept", "target": "ConceptScheme"},
+    "supported_by": {"source": "Procedure", "target": "DocumentRevision"}
+  },
+  "subjects": {
+    "portal-production": {"type": "ServiceDeployment", "label": "Portal / production"},
+    "identity-production": {"type": "ServiceDeployment", "label": "Identity / production"},
+    "identity-operations": {"type": "Team", "label": "Identity Operations"},
+    "platform-operations": {"type": "Team", "label": "Platform Operations"},
+    "authentication-recovery": {"type": "Procedure", "label": "Authentication recovery"},
+    "access-policy": {"type": "Policy", "label": "Access recovery policy"},
+    "high-risk": {"type": "Concept", "label": "High risk"},
+    "risk-scheme": {"type": "ConceptScheme", "label": "Policy risk classifications"},
+    "recovery-d2": {"type": "DocumentRevision", "label": "Recovery text / revision d2"}
+  },
+  "assertions": [
+    ["portal-production", "depends_on", "identity-production"],
+    ["identity-production", "operated_by", "identity-operations"],
+    ["authentication-recovery", "applies_to", "identity-production"],
+    ["access-policy", "governs", "authentication-recovery"],
+    ["access-policy", "risk_category", "high-risk"],
+    ["high-risk", "in_scheme", "risk-scheme"],
+    ["authentication-recovery", "supported_by", "recovery-d2"]
+  ]
+}

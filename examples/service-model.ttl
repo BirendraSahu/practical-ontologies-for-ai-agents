@@ -1,0 +1,51 @@
+@prefix ex: <https://example.org/service/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+ex:ServiceDeployment a rdfs:Class ;
+    rdfs:comment "A service operating in one identified environment." .
+ex:Team a rdfs:Class .
+ex:Procedure a rdfs:Class .
+ex:Policy a rdfs:Class .
+ex:DocumentRevision a rdfs:Class .
+
+ex:depends_on a rdf:Property ;
+    rdfs:domain ex:ServiceDeployment ; rdfs:range ex:ServiceDeployment .
+ex:operated_by a rdf:Property ;
+    rdfs:domain ex:ServiceDeployment ; rdfs:range ex:Team ;
+    rdfs:comment "Primary operating responsibility; not product accountability." .
+ex:applies_to a rdf:Property ;
+    rdfs:domain ex:Procedure ; rdfs:range ex:ServiceDeployment .
+ex:governs a rdf:Property ;
+    rdfs:domain ex:Policy ; rdfs:range ex:Procedure .
+ex:risk_category a rdf:Property ;
+    rdfs:domain ex:Policy ; rdfs:range skos:Concept .
+ex:supported_by a rdf:Property ;
+    rdfs:domain ex:Procedure ; rdfs:range ex:DocumentRevision .
+
+ex:portal-production a ex:ServiceDeployment ;
+    rdfs:label "Portal / production" ;
+    ex:depends_on ex:identity-production .
+ex:identity-production a ex:ServiceDeployment ;
+    rdfs:label "Identity / production" ;
+    ex:operated_by ex:identity-operations .
+ex:identity-operations a ex:Team ; rdfs:label "Identity Operations" .
+ex:platform-operations a ex:Team ; rdfs:label "Platform Operations" .
+ex:authentication-recovery a ex:Procedure ;
+    rdfs:label "Authentication recovery" ;
+    ex:applies_to ex:identity-production ;
+    ex:supported_by ex:recovery-d2 .
+ex:access-policy a ex:Policy ;
+    rdfs:label "Access recovery policy" ;
+    ex:governs ex:authentication-recovery ;
+    ex:risk_category ex:high-risk .
+ex:risk-scheme a skos:ConceptScheme ;
+    skos:prefLabel "Policy risk classifications"@en .
+ex:high-risk a skos:Concept ;
+    skos:prefLabel "High risk"@en ;
+    skos:definition """A policy risk classification requiring elevated review
+under this example's assessment rules."""@en ;
+    skos:inScheme ex:risk-scheme .
+ex:recovery-d2 a ex:DocumentRevision ;
+    rdfs:label "Recovery text / revision d2" .
